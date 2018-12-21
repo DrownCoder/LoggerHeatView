@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentActivity;
  */
 public class HookFindView {
     public static void hook(final FragmentActivity activity) {
+        activity.getSupportFragmentManager().beginTransaction().add(HookFragment.newInstance(),
+                "").commitAllowingStateLoss();
         LogViewAsyncTask task = new LogViewAsyncTask(activity);
         task.execute();
     }

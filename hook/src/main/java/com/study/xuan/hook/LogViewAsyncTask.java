@@ -1,6 +1,11 @@
 package com.study.xuan.hook;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
@@ -8,6 +13,8 @@ import android.view.ViewGroup;
 
 import com.study.xuan.panel.LoggerPannel;
 import com.study.xuan.panel.ViewPoint;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -42,17 +49,18 @@ public class LogViewAsyncTask extends AsyncTask {
     }
 
     private void saveEventView() {
+        List<Integer> viewIds = new ArrayList<>();
         for (Map.Entry<EventLog,String> entry:ViewIdMap.EventMap.entrySet()) {
             String name = entry.getValue();
-            int id = ViewIdMap.ViewMap.get(name);
-            View target = activityRoot.get().findViewById(id);
-            int[] location = new int[2];
+            viewIds.add(ViewIdMap.ViewMap.get(name));
+            /*int[] location = new int[2];
             target.getLocationOnScreen(location);
             ArrayList<ViewPoint> data = new ArrayList<>();
             data.add(new ViewPoint(location[0], location[1]));
             LoggerPannel pannel = LoggerPannel.newInstance(data);
-            pannel.show(activityRoot.get().getSupportFragmentManager(), "");
+            pannel.show(activityRoot.get().getSupportFragmentManager(), "");*/
         }
+        EventBus.getDefault().post(viewIds);
     }
 
     private static List<View> logViewName(View view) {

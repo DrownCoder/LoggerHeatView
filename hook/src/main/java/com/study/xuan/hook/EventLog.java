@@ -8,6 +8,8 @@ package com.study.xuan.hook;
 public class EventLog {
     public int eventId;
     public String other;
+    public int viewId;
+    public LoggerInfo loggerInfo;
 
     public EventLog(int eventId, String other) {
         this.eventId = eventId;

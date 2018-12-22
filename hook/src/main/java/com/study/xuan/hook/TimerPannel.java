@@ -1,4 +1,4 @@
-package com.study.xuan.panel;
+package com.study.xuan.hook;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,16 +18,22 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.appeaser.sublimepickerlibrary.SublimePicker;
+import com.appeaser.sublimepickerlibrary.datepicker.SelectedDate;
+import com.appeaser.sublimepickerlibrary.helpers.SublimeListenerAdapter;
+import com.appeaser.sublimepickerlibrary.recurrencepicker.SublimeRecurrencePicker;
 import com.study.xuan.shapebuilder.shape.ShapeBuilder;
 
-import java.util.ArrayList;
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.Calendar;
 
 /**
  * Author : xuan.
  * Date : 2018/12/20.
  * Description :the description of this file
  */
-public class LoggerPannel extends DialogFragment {
+public class TimerPannel extends DialogFragment {
     private Context mContext;
     private FrameLayout mRoot;
 
@@ -36,12 +43,8 @@ public class LoggerPannel extends DialogFragment {
         super.onAttach(context);
     }
 
-    public static LoggerPannel newInstance(ArrayList<ViewPoint> points) {
-
-        Bundle args = new Bundle();
-        LoggerPannel fragment = new LoggerPannel();
-        args.putSerializable("source", points);
-        fragment.setArguments(args);
+    public static TimerPannel newInstance() {
+        TimerPannel fragment = new TimerPannel();
         return fragment;
     }
 
@@ -76,14 +79,34 @@ public class LoggerPannel extends DialogFragment {
     }
 
     private void initView() {
-        Bundle bundle = getArguments();
-        ArrayList<ViewPoint> points = (ArrayList<ViewPoint>) bundle.getSerializable("source");
-        for (ViewPoint point : points) {
-            mRoot.addView(createPoint(point));
-        }
+        final SublimePicker picker = new SublimePicker(mContext);
+        picker.setBackgroundColor(Color.WHITE);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams
+                .WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.CENTER;
+        mRoot.addView(picker, params);
+        picker.initializePicker(null, new SublimeListenerAdapter() {
+            @Override
+            public void onDateTimeRecurrenceSet(SublimePicker sublimeMaterialPicker, SelectedDate
+                    selectedDate, int hourOfDay, int minute, SublimeRecurrencePicker
+                                                        .RecurrenceOption recurrenceOption,
+                                                String recurrenceRule) {
+                Calendar calendar = selectedDate.getFirstDate();
+                String day = String.valueOf(calendar.get(Calendar.YEAR)) + "-" + String.valueOf
+                        (calendar.get(Calendar.MONTH)) + "-" + String.valueOf(calendar.get
+                        (Calendar.DAY_OF_MONTH));
+                EventBus.getDefault().post(day);
+                dismissAllowingStateLoss();
+            }
+
+            @Override
+            public void onCancelled() {
+                dismissAllowingStateLoss();
+            }
+        });
     }
 
-    public ImageView createPoint(ViewPoint point) {
+    /*public ImageView createPoint(ViewPoint point) {
         ImageView viewPoint = new ImageView(mContext);
         ShapeBuilder.create().Type(GradientDrawable.OVAL).Solid(Color.RED).build(viewPoint);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(150, 150);
@@ -92,5 +115,5 @@ public class LoggerPannel extends DialogFragment {
         viewPoint.setLayoutParams(params);
         viewPoint.setAlpha(0.3f);
         return viewPoint;
-    }
+    }*/
 }

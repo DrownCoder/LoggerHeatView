@@ -7,17 +7,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 
-import com.appeaser.sublimepickerlibrary.SublimePicker;
-import com.appeaser.sublimepickerlibrary.datepicker.SelectedDate;
-import com.appeaser.sublimepickerlibrary.helpers.SublimeListenerAdapter;
-import com.appeaser.sublimepickerlibrary.recurrencepicker.SublimeRecurrencePicker;
 import com.study.xuan.shapebuilder.shape.ShapeBuilder;
 
 import org.greenrobot.eventbus.EventBus;
@@ -26,6 +23,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Arrays;
 import java.util.List;
+
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 
 /**
  * Author : xuan.
@@ -39,7 +38,7 @@ public class HookFragment extends Fragment implements View.OnClickListener {
     private FrameLayout control;
     private Context mContext;
     private HintPopupWindow popupWindow;
-    private List<Integer> viewIds;
+    private List<EventLog> viewIds;
     public static HookFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -96,8 +95,13 @@ public class HookFragment extends Fragment implements View.OnClickListener {
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(List<Integer> id) {
+    public void onMessageEvent(List<EventLog> id) {
         viewIds = id;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(String day) {
+        Log.i("xxxxxxxxx", day);
     }
 
     @Override
@@ -117,30 +121,40 @@ public class HookFragment extends Fragment implements View.OnClickListener {
     }
 
     private void showTimer() {
-        final SublimePicker picker = new SublimePicker(mContext);
-        getActivity().getWindow().addContentView(picker,new ViewGroup.LayoutParams(ViewGroup
-                .LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
-        picker.initializePicker(null, new SublimeListenerAdapter() {
-            @Override
-            public void onDateTimeRecurrenceSet(SublimePicker sublimeMaterialPicker, SelectedDate
-                    selectedDate, int hourOfDay, int minute, SublimeRecurrencePicker
-                                                        .RecurrenceOption recurrenceOption,
-                                                String recurrenceRule) {
-
-            }
-
-            @Override
-            public void onCancelled() {
-
-            }
-        });
+        TimerPannel pannel = TimerPannel.newInstance();
+        pannel.show(getFragmentManager(),"");
     }
 
     private void injectHeat() {
         if (viewIds != null) {
-            for (int id : viewIds) {
-                View target = getActivity().findViewById(id);
-                target.setBackgroundColor(Color.RED);
+            for (final EventLog id : viewIds) {
+                final View target = getActivity().findViewById(id.viewId);
+                if (id.loggerInfo != null) {
+                    target.setBackgroundColor(ColorRank.color(id.loggerInfo.pos));
+                    target.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            StringBuilder builder = new StringBuilder();
+                            builder.append("pv=").append(id.loggerInfo.pv)
+                                    .append("\nuv=").append(id.loggerInfo.uv)
+                                    .append("(").append(id.loggerInfo.rank).append(")")
+                                    .append("\nEventId=").append(id.eventId);
+                            if (!TextUtils.isEmpty(id.other)) {
+                                builder.append("\nOther:[").append(id.other).append("]");
+                            }
+                            new SimpleTooltip.Builder(mContext)
+                                    .anchorView(v)
+                                    .text(builder)
+                                    .gravity(Gravity.END)
+                                    .animated(true)
+                                    .transparentOverlay(false)
+                                    .build()
+                                    .show();
+
+                            return true;
+                        }
+                    });
+                }
             }
         }
     }

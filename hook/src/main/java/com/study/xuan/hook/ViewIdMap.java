@@ -16,7 +16,7 @@ public class ViewIdMap {
 
     static {
         EventMap.put(new EventLog(4201), "tv_btn");
-        EventMap.put(new EventLog(4201), "tv_btn1");
+        EventMap.put(new EventLog(4202,"floor=查看更多"), "tv_btn1");
     }
 
     public static void logView(String idName, int id) {

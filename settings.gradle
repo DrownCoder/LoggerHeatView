@@ -1,1 +1,1 @@
-include ':app', ':hook', ':panel'
+include ':app', ':hook'

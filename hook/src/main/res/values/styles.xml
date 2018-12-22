@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="simpletooltip_background">@android:color/black</color>
+    <color name="simpletooltip_text">@android:color/white</color>
+    <color name="simpletooltip_arrow">@android:color/black</color>
+    <dimen name="simpletooltip_max_width">150dp</dimen>
+    <dimen name="simpletooltip_overlay_offset">10dp</dimen>
+    <dimen name="simpletooltip_margin">10dp</dimen>
+    <dimen name="simpletooltip_padding">8dp</dimen>
+    <dimen name="simpletooltip_arrow_width">30dp</dimen>
+    <dimen name="simpletooltip_arrow_height">15dp</dimen>
+    <dimen name="simpletooltip_animation_padding">4dp</dimen>
+    <integer name="simpletooltip_overlay_alpha">120</integer>
+    <integer name="simpletooltip_animation_duration">800</integer>
+    <style name="simpletooltip_default" parent="@android:style/TextAppearance.Medium"></style>
+</resources>

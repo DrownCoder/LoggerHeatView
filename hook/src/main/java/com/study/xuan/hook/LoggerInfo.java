@@ -10,5 +10,8 @@ public class LoggerInfo {
     public String pv;
     public String uv;
     public String rank;
+    public String other;
     public int pos;
+    public String viewName;
+    public int viewId;
 }

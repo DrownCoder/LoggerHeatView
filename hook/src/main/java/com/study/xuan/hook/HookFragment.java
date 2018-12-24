@@ -33,12 +33,13 @@ import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
  */
 public class HookFragment extends Fragment implements View.OnClickListener {
     public static final String[] OPTION = new String[]{
-            "选择日期","热力图","曲线图"
+            "选择日期", "热力图", "曲线图"
     };
     private FrameLayout control;
     private Context mContext;
     private HintPopupWindow popupWindow;
-    private List<EventLog> viewIds;
+    private List<LoggerInfo> viewIds;
+
     public static HookFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -74,7 +75,8 @@ public class HookFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 if (popupWindow == null) {
-                    popupWindow = new HintPopupWindow(getActivity(), Arrays.asList(OPTION),HookFragment.this);
+                    popupWindow = new HintPopupWindow(getActivity(), Arrays.asList(OPTION),
+                            HookFragment.this);
                 }
                 popupWindow.showPopupWindow(control);
             }
@@ -95,7 +97,7 @@ public class HookFragment extends Fragment implements View.OnClickListener {
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(List<EventLog> id) {
+    public void onMessageEvent(List<LoggerInfo> id) {
         viewIds = id;
     }
 
@@ -122,39 +124,37 @@ public class HookFragment extends Fragment implements View.OnClickListener {
 
     private void showTimer() {
         TimerPannel pannel = TimerPannel.newInstance();
-        pannel.show(getFragmentManager(),"");
+        pannel.show(getFragmentManager(), "");
     }
 
     private void injectHeat() {
         if (viewIds != null) {
-            for (final EventLog id : viewIds) {
-                final View target = getActivity().findViewById(id.viewId);
-                if (id.loggerInfo != null) {
-                    target.setBackgroundColor(ColorRank.color(id.loggerInfo.pos));
-                    target.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View v) {
-                            StringBuilder builder = new StringBuilder();
-                            builder.append("pv=").append(id.loggerInfo.pv)
-                                    .append("\nuv=").append(id.loggerInfo.uv)
-                                    .append("(").append(id.loggerInfo.rank).append(")")
-                                    .append("\nEventId=").append(id.eventId);
-                            if (!TextUtils.isEmpty(id.other)) {
-                                builder.append("\nOther:[").append(id.other).append("]");
-                            }
-                            new SimpleTooltip.Builder(mContext)
-                                    .anchorView(v)
-                                    .text(builder)
-                                    .gravity(Gravity.END)
-                                    .animated(true)
-                                    .transparentOverlay(false)
-                                    .build()
-                                    .show();
-
-                            return true;
+            for (final LoggerInfo loggerInfo : viewIds) {
+                final View target = getActivity().findViewById(loggerInfo.viewId);
+                target.setBackgroundColor(ColorRank.color(loggerInfo.pos));
+                target.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        StringBuilder builder = new StringBuilder();
+                        builder.append("pv=").append(loggerInfo.pv)
+                                .append("\nuv=").append(loggerInfo.uv)
+                                .append("(").append(loggerInfo.rank).append(")")
+                                .append("\nEventId=").append(loggerInfo.EventId);
+                        if (!TextUtils.isEmpty(loggerInfo.other)) {
+                            builder.append("\nOther:[").append(loggerInfo.other).append("]");
                         }
-                    });
-                }
+                        new SimpleTooltip.Builder(mContext)
+                                .anchorView(v)
+                                .text(builder)
+                                .gravity(Gravity.END)
+                                .animated(true)
+                                .transparentOverlay(false)
+                                .build()
+                                .show();
+
+                        return true;
+                    }
+                });
             }
         }
     }

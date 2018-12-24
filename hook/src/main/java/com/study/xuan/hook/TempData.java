@@ -21,4 +21,7 @@ public class TempData {
     public static final String[] UV = new String[]{
             "835,447", "35,579", "39,627", "99,889", "7,175", "2,822", "5,467", "8,933", "4,186"
     };
+    public static final String[] ViewId = new String[]{
+            "tv_btn","tv_btn1","tv_btn2","tv_btn3","tv_btn4","tv_btn5","tv_btn6","tv_btn7","tv_btn8"
+    };
 }

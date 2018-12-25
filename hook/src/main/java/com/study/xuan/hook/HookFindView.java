@@ -8,11 +8,10 @@ import android.support.v4.app.FragmentActivity;
  * Description :the description of this file
  */
 public class HookFindView {
+    public static volatile boolean isCalculating = false;
     public static void hook(final FragmentActivity activity) {
         activity.getSupportFragmentManager().beginTransaction().add(HookFragment.newInstance(),
                 "").commitAllowingStateLoss();
-        LogViewAsyncTask task = new LogViewAsyncTask(activity);
-        task.execute();
     }
 
 }

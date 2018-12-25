@@ -11,7 +11,6 @@ import org.greenrobot.eventbus.EventBus;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Author : xuan.
@@ -19,6 +18,8 @@ import java.util.Map;
  * Description :the description of this file
  */
 public class LogViewAsyncTask extends AsyncTask {
+    public static final int DO_IN_THREAD = 0;
+    public static final int FINISH = 1;
     private WeakReference<FragmentActivity> activityRoot;
     private SparseArray<LoggerInfo> ranks;
 
@@ -49,6 +50,8 @@ public class LogViewAsyncTask extends AsyncTask {
 
     @Override
     protected Object doInBackground(Object[] objects) {
+        HookFindView.isCalculating = true;
+        EventBus.getDefault().post(0);
         //记录id和name的关系
         logViewName(activityRoot.get().getWindow().getDecorView());
         try {
@@ -62,18 +65,22 @@ public class LogViewAsyncTask extends AsyncTask {
         return null;
     }
 
+    @Override
+    protected void onPostExecute(Object o) {
+        HookFindView.isCalculating = false;
+        EventBus.getDefault().post(1);
+        super.onPostExecute(o);
+    }
+
     private void saveEventView() {
         List<LoggerInfo> logs = new ArrayList<>();
         for (int i = 0; i < ranks.size(); i++) {
             LoggerInfo item = ranks.valueAt(i);
-            item.viewId = ViewIdMap.ViewMap.get(item.viewName);
+            Object viewId = ViewIdMap.ViewMap.get(item.viewName);
+            if (viewId != null) {
+                item.viewId = (Integer) viewId;
+            }
             logs.add(item);
-            /*int[] location = new int[2];
-            target.getLocationOnScreen(location);
-            ArrayList<ViewPoint> data = new ArrayList<>();
-            data.add(new ViewPoint(location[0], location[1]));
-            TimerPannel pannel = TimerPannel.newInstance(data);
-            pannel.show(activityRoot.get().getSupportFragmentManager(), "");*/
         }
         EventBus.getDefault().post(logs);
     }

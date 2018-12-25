@@ -22,6 +22,6 @@ public class TempData {
             "835,447", "35,579", "39,627", "99,889", "7,175", "2,822", "5,467", "8,933", "4,186"
     };
     public static final String[] ViewId = new String[]{
-            "tv_btn","tv_btn1","tv_btn2","tv_btn3","tv_btn4","tv_btn5","tv_btn6","tv_btn7","tv_btn8"
+            "ll_talk","iv_btn_write_comment","ll_back_top","tv_bang_more","tv_buy_also_buy","etv_more","ll_magic_index1","ll_magic_index2","vp_product_banner"
     };
 }

@@ -11,6 +11,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Author : xuan.
@@ -36,13 +37,13 @@ public class LogViewAsyncTask extends AsyncTask {
 
     private void requestLoggerInfo() {
         ranks = new SparseArray<>();
-        for (int i = 0; i < TempData.EVENID.length; i++) {
+        for (int i = 0; i < TempData.ViewId.length; i++) {
             LoggerInfo item = new LoggerInfo();
             item.pos = i;
-            item.rank = TempData.RANK[i];
-            item.pv = TempData.PV[i];
-            item.uv = TempData.UV[i];
-            item.EventId = TempData.EVENID[i];
+            item.rank = new Random().nextFloat() * 100.0f + "%";
+            item.pv = TempData.PV[0] + new Random().nextInt(100000);
+            item.uv = TempData.UV[0] + new Random().nextInt(100000);
+            item.EventId = TempData.EVENID[0]+ new Random().nextInt(100);
             item.viewName = TempData.ViewId[i];
             ranks.put(item.EventId, item);
         }

@@ -9,14 +9,22 @@ import android.graphics.Color;
  */
 public class ColorRank {
     public static final String[] COLOR = new String[]{
-            "#66F20303",
-            "#66FF703C",
-            "#66FFA73C",
-            "#66FFDF3C",
-            "#66DBFF3C",
-            "#667AFF3C",
-            "#66439F24",
-            "#66286016"
+            "#66D0021B",
+            "#66E4142E",
+            "#66CE2136",
+            "#66E33D51",
+            "#66FC0B03",
+            "#66FB1911",
+            "#66F92C25",
+            "#66F8463F",
+            "#66FB625C",
+            "#66F97873",
+            "#66F96706",
+            "#66FA7319",
+            "#66FB7E2B",
+            "#66F9883D",
+            "#66FB9652",
+            "#66FA9F62"
     };
 
     public static int color(int rank) {

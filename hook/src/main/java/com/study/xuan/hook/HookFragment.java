@@ -2,8 +2,8 @@ package com.study.xuan.hook;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.MessageQueue;
@@ -159,12 +159,17 @@ public class HookFragment extends Fragment implements View.OnClickListener, Date
                 injectHeat();
                 break;
             case 2:
+                injectChart();
                 break;
             case 3:
                 refresh();
                 break;
         }
         popupWindow.dismissPopupWindow();
+    }
+
+    private void injectChart() {
+
     }
 
     private void refresh() {
@@ -189,7 +194,9 @@ public class HookFragment extends Fragment implements View.OnClickListener, Date
                 try {
                     state = HEAT;
                     final View target = getActivity().findViewById(loggerInfo.viewId);
-                    target.setBackgroundColor(ColorRank.color(loggerInfo.pos));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        target.setForeground(new ColorDrawable(ColorRank.color(loggerInfo.pos)));
+                    }
                     target.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {

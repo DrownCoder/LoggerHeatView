@@ -1,2 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.study.xuan.hook" />
+    package="com.study.xuan.hook" >
+    <application>
+        <activity android:name=".chart.ListViewMultiChartActivity"
+            android:theme="@style/Theme.AppCompat.Light"
+            />
+    </application>
+</manifest>

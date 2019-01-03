@@ -2,6 +2,7 @@ package com.study.xuan.hook;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,15 +22,16 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.study.xuan.hook.chart.ListViewMultiChartActivity;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
-
-import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 
 /**
  * Author : xuan.
@@ -42,7 +44,7 @@ public class HookFragment extends Fragment implements View.OnClickListener, Date
     public static final int REFRESH = 0;
     public static final int HEAT = 1;
     public static final String[] OPTION = new String[]{
-            "选择日期", "热力图", "曲线图", "刷新"
+            "切换IOS","选择日期", "热力图", "曲线图", "刷新"
     };
     private FrameLayout control;
     private ImageView ivLogo;
@@ -152,16 +154,16 @@ public class HookFragment extends Fragment implements View.OnClickListener, Date
     public void onClick(View v) {
         Integer pos = (Integer) v.getTag();
         switch (pos) {
-            case 0:
+            case 1:
                 showTimer();
                 break;
-            case 1:
+            case 2:
                 injectHeat();
                 break;
-            case 2:
+            case 3:
                 injectChart();
                 break;
-            case 3:
+            case 4:
                 refresh();
                 break;
         }
@@ -200,22 +202,40 @@ public class HookFragment extends Fragment implements View.OnClickListener, Date
                     target.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
-                            StringBuilder builder = new StringBuilder();
+                            ArrayList<String> list = new ArrayList();
+                            list.add("pv=" + loggerInfo.pv);
+                            list.add("uv=" + loggerInfo.uv);
+                            list.add("EventId=" + loggerInfo.EventId);
+                            list.add("排名" + loggerInfo.rank);
+                            if (!TextUtils.isEmpty(loggerInfo.other)) {
+                                list.add("other=" + loggerInfo.other);
+                            }
+                            list.add("查看曲线图");
+                            /*StringBuilder builder = new StringBuilder();
                             builder.append("pv=").append(loggerInfo.pv)
                                     .append("\nuv=").append(loggerInfo.uv)
                                     .append("(").append(loggerInfo.rank).append(")")
                                     .append("\nEventId=").append(loggerInfo.EventId);
                             if (!TextUtils.isEmpty(loggerInfo.other)) {
                                 builder.append("\nOther:[").append(loggerInfo.other).append("]");
-                            }
-                            new SimpleTooltip.Builder(mContext)
+                            }*/
+                            new HintPopupWindow(getActivity(), list,
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent intent = new Intent(getActivity(),
+                                                    ListViewMultiChartActivity.class);
+                                            startActivity(intent);
+                                        }
+                                    }).showPopupWindow(target);
+                           /* new SimpleTooltip.Builder(mContext)
                                     .anchorView(v)
                                     .text(builder)
                                     .gravity(Gravity.END)
                                     .animated(true)
                                     .transparentOverlay(false)
                                     .build()
-                                    .show();
+                                    .show();*/
                             return true;
                         }
                     });

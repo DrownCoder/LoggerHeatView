@@ -43,10 +43,10 @@ public class HookChartFragment extends DialogFragment {
 
     private void initChart() {
         //在点击高亮值时回调
-        lineChart.setOnChartValueSelectedListener(this);
+        //lineChart.setOnChartValueSelectedListener(this);
 
         //设置整个图表的颜色
-        lineChart.setBackgroundResource(R.drawable.bg_line_chart);
+        //lineChart.setBackgroundResource(R.drawable.bg_line_chart);
 
         Description description = lineChart.getDescription();
         description.setYOffset(10);
@@ -72,7 +72,7 @@ public class HookChartFragment extends DialogFragment {
 
         //设置是否显示Y轴的值
         leftAxis.setDrawLabels(true);
-        leftAxis.setTextColor(this.getResources().getColor(R.color.homecolor));
+        //leftAxis.setTextColor(this.getResources().getColor(R.color.homecolor));
 
         //设置所有垂直Y轴的的网格线是否显示
         leftAxis.setDrawGridLines(true);
@@ -97,7 +97,7 @@ public class HookChartFragment extends DialogFragment {
 
         //设置X轴上lable颜色和大小
         xAxis.setTextSize(8f);
-        xAxis.setTextColor(Color.GRAY);
+        //xAxis.setTextColor(Color.GRAY);
 
         //设置X轴高度
         xAxis.setAxisLineWidth(1);
